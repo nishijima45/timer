@@ -35,19 +35,27 @@ class ViewController: UIViewController {
     
     @IBAction func startTimer(_ sender: Any) {
         // 再生ボタンを押すとタイマー作成、始動
+        // 動作中のタイマーを1つに保つために、 timer が存在しない場合だけ、タイマーを生成して動作させる
         self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
-    }
+        }
     
     @IBAction func pauseTimer(_ sender: Any) {
         // タイマーを破棄
-        self.timer.invalidate()
+        if self.timer != nil {
+            self.timer.invalidate()   // 現在のタイマーを破棄する
+            self.timer = nil          // startTimer() の timer == nil で判断するために、 timer = nil としておく
+        }
     }
-    
     
     @IBAction func resetTimer(_ sender: Any) {
         // リセットボタンを押すと、タイマーの時間を0に
         self.timer_sec = 0
         self.timerLabel.text = String(format: "%.1f", self.timer_sec)
-}
+        
+        if self.timer != nil {
+            self.timer.invalidate()   // 現在のタイマーを破棄する
+            self.timer = nil          // startTimer() の timer == nil で判断するために、 timer = nil としておく
+        }
+    }
 }
 
